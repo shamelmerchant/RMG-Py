@@ -647,6 +647,16 @@ def projectRotors(conformer, F, rotors, linear, TS):
     mass = conformer.mass.value_si
     coordinates = conformer.coordinates.value_si
     
+    I = conformer.getMomentOfInertiaTensor()
+    principalMomentOfInertia, V = numpy.linalg.eigh(I)
+    
+    coordinates = coordinates.T
+    V = V.T
+    
+    transformed_coordinates = V.dot(coordinates)
+    
+    coordinates = transformed_coordinates.T
+    
     if linear:
         D = numpy.zeros((Natoms*3,5+Nrotors), numpy.float64)
     else:
